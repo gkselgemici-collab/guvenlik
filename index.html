@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Güvenlik Uyarısı</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, Roboto, "Segoe UI", sans-serif;
+    background: #111; color: #fff; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .card { width: 100%; max-width: 420px; text-align: center; }
+  .alarm {
+    background: #c62828; border-radius: 16px; padding: 28px 20px;
+    animation: blink 1s infinite;
+  }
+  @keyframes blink { 50% { background: #8e0000; } }
+  .icon { font-size: 56px; }
+  h1 { font-size: 24px; margin: 10px 0; letter-spacing: 1px; }
+  .alarm p { font-size: 18px; }
+  .scan { text-align: left; margin: 24px 4px; font-size: 17px; line-height: 2; }
+  .scan div { opacity: 0; transition: opacity .4s; }
+  .scan div.on { opacity: 1; }
+  .bar { height: 14px; background: #333; border-radius: 7px; overflow: hidden; }
+  .fill { height: 100%; width: 0; background: #ff5252; transition: width .3s; }
+  .pct { margin-top: 8px; color: #ff8a80; font-weight: bold; }
+  #joke { display: none; }
+  #joke h1 { font-size: 64px; margin: 20px 0; }
+  #joke p { font-size: 20px; color: #ccc; }
+  #joke .big { font-size: 100px; }
+</style>
+</head>
+<body>
+  <div class="card" id="warn">
+    <div class="alarm">
+      <div class="icon">⚠️</div>
+      <h1>KRİTİK GÜVENLİK UYARISI</h1>
+      <p>Telefonunuzda güvenlik tehdidi tespit edildi!</p>
+    </div>
+    <div class="scan" id="scan">
+      <div>📷 Fotoğraflar taranıyor...</div>
+      <div>👥 Kişiler kontrol ediliyor...</div>
+      <div>💬 Mesajlar analiz ediliyor...</div>
+      <div>🌐 IP adresiniz tespit edildi...</div>
+      <div>📤 Veriler gönderiliyor...</div>
+    </div>
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="pct" id="pct">%0</div>
+  </div>
+
+  <div class="card" id="joke">
+    <div class="big">😂</div>
+    <h1>ŞAKA!</h1>
+    <p>Telefonun gayet iyi, hiçbir şey olmadı.<br>Ama yüzünü görmek isterdim 😄</p>
+  </div>
+
+<script>
+  const items = document.querySelectorAll('#scan div');
+  const fill = document.getElementById('fill');
+  const pct = document.getElementById('pct');
+  let p = 0;
+  if (navigator.vibrate) navigator.vibrate([300, 200, 300]);
+  const t = setInterval(() => {
+    p += 1;
+    fill.style.width = p + '%';
+    pct.textContent = '%' + p;
+    const shown = Math.floor(p / 20);
+    items.forEach((el, i) => { if (i <= shown) el.classList.add('on'); });
+    if (p >= 100) {
+      clearInterval(t);
+      setTimeout(() => {
+        document.getElementById('warn').style.display = 'none';
+        document.getElementById('joke').style.display = 'block';
+        document.body.style.background = '#1b5e20';
+      }, 800);
+    }
+  }, 592);
+</script>
+</body>
+</html>
